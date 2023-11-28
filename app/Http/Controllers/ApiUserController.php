@@ -17,7 +17,7 @@ class ApiUserController extends Controller
                 'id' => 'required|exists:users,id',
                 'fname' => 'nullable|min:3|max:50',
                 'lname' => 'nullable|min:3|max:50',
-                'password' => 'nullable|min:6',
+                'password' => 'nullable|min:6|max:20',
                 'email' => [
                     'nullable',
                     'email',
@@ -75,7 +75,7 @@ class ApiUserController extends Controller
             'lname' => 'required|min:3|max:50',
             'email' => 'required|email|unique:users,email',
             'phone' => 'nullable',
-            'password' => 'required|min:6',
+            'password' => 'required|min:6|max:20',
         ]);
 
         if (
