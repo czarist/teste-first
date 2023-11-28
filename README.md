@@ -16,6 +16,10 @@
     6. Create a database in localhost named crud_admin
     7. Run php artisan migrate --seed 
     8. Run php artisan serve
+    9. Run php artisan test
+
+![image](https://github.com/czarist/teste-first/assets/55374787/4480a25e-7a2b-43e6-93bf-e690f05e6629)
+
    
     
 ### Admin Login 
