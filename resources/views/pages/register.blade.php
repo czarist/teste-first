@@ -41,6 +41,12 @@
                                         placeholder="Senha">
                                 </div>
 
+                                <div class="form-group">
+                                    <label for="password_confirmation">Confirmar Senha</label>
+                                    <input type="password" id="password_confirmation" name="password_confirmation"
+                                        class="form-control" placeholder="Confirmar Senha">
+                                </div>
+
                                 <button type="submit" class="btn btn-dark btn-block" id="save_form">Registrar</button>
                             </form>
                             <a class="btn btn-dark btn-block mt-5" href="{{ url('login') }}">Já Tenho Cadastro</a>
@@ -60,15 +66,26 @@
                 let csrfToken = $('meta[name="csrf-token"]').attr('content');
 
                 e.preventDefault();
-                var fname = $("#fname").val();
-                var lname = $("#lname").val();
-                var email = $("#email").val();
-                var phone = $("#phone").val();
-                var password = $("#password").val();
+                const fname = $("#fname").val();
+                const lname = $("#lname").val();
+                const email = $("#email").val();
+                const phone = $("#phone").val();
+                const password = $("#password").val();
+                const password_confirmation = $("#password_confirmation").val();
+
+                if (password !== password_confirmation) {
+                    $('#notifDiv').fadeIn();
+                    $('#notifDiv').css('background', 'red');
+                    $('#notifDiv').text('As senhas não coincidem');
+                    setTimeout(() => {
+                        $('#notifDiv').fadeOut();
+                    }, 3000);
+                    return;
+                }
 
                 $.ajax({
                     type: 'POST',
-                    url: 'save_register',
+                    url: 'api/save_register',
                     data: {
                         '_token': csrfToken,
                         email: email,
@@ -96,11 +113,12 @@
                             $('[name="lname"]').val('');
                             $('[name="email"]').val('');
                             $('[name="password"]').val('');
+                            $('[name="password_confirmation"]').val('');
                             window.location.replace('/login')
                         } else {
                             $('#notifDiv').fadeIn();
                             $('#notifDiv').css('background', 'red');
-                            $('#notifDiv').text('An error occured. Please try later');
+                            $('#notifDiv').text('An error occurred. Please try later');
                             setTimeout(() => {
                                 $('#notifDiv').fadeOut();
                             }, 3000);

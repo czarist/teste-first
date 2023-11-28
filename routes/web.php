@@ -21,18 +21,15 @@ Route::get('/', function () {
 Route::group(['middleware' => 'auth.user'], function () {
     Route::get('/', [App\Http\Controllers\UserController::class, 'dashboard'])->name('dashboard');
     Route::get('/logout', [App\Http\Controllers\UserController::class, 'logout'])->name('logout');
-    Route::get('/endereco/{id}', [App\Http\Controllers\AdressController::class, 'endereco'])->name('endereco');
-
-    //user register
-    Route::post('/update_register', [App\Http\Controllers\UserController::class, 'update_register'])->name('update_register');
-    Route::post('/delete_user', [App\Http\Controllers\UserController::class, 'delete_user'])->name('delete_user');
     Route::get('/dados/{id}', [App\Http\Controllers\UserController::class, 'dados']);
+
+    Route::put('/update_register', [App\Http\Controllers\ApiUserController::class, 'update_register'])->name('update_register');
+    Route::delete('/delete_user', [App\Http\Controllers\ApiUserController::class, 'delete_user'])->name('delete_user');
 });
 
 //user login
-Route::get('/login', [App\Http\Controllers\UserController::class, 'login'])->name('login');
 Route::post('/user_login', [App\Http\Controllers\UserController::class, 'user_login']);
+Route::get('/login', [App\Http\Controllers\UserController::class, 'login'])->name('login');
 
 //user register
 Route::get('/register', [App\Http\Controllers\UserController::class, 'register']);
-Route::post('/save_register', [App\Http\Controllers\UserController::class, 'save_register'])->name('save_user');

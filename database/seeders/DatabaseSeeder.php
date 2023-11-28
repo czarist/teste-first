@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         //\App\Models\User::factory(10)->create();
 
         \App\Models\User::factory()->create([
+            'name'  => null,
             'fname' => 'admin',
             'lname' => 'admin',
             'email' => 'admin@admin.com',
@@ -26,6 +27,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         \App\Models\User::factory()->create([
+            'name'  => null,
             'fname' => 'Lucas',
             'lname' => 'Cezar',
             'email' => 'teste@gmail.com',
@@ -35,18 +37,20 @@ class DatabaseSeeder extends Seeder
         ]);
 
         \App\Models\User::factory()->create([
-            'fname' => 'Manoel',
+            'name'  => null,
+            'fname' => 'Ricardo',
             'lname' => 'Gomes',
-            'email' => 'manoelgomes@gmail.com',
+            'email' => 'ricardogomes@gmail.com',
             'role' => 1,
             'phone' => '(51) 98659-3952',
             'password' => Hash::make('admin@123')
         ]);
 
         \App\Models\User::factory()->create([
+            'name'  => null,
             'fname' => 'Rogério',
-            'lname' => 'Skylab',
-            'email' => 'cigarro@gmail.com',
+            'lname' => 'Gomes',
+            'email' => 'gomes@gmail.com',
             'role' => 1,
             'phone' => '(51) 98659-3952',
             'password' => Hash::make('admin@123')

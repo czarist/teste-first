@@ -44,6 +44,26 @@
 
                     </tbody>
                 </table>
+                <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Confirmação de Exclusão</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Tem certeza de que deseja excluir este usuário?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                <button type="button" class="btn btn-danger" id="confirmDeleteButton">Excluir</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
 
             </div>
@@ -55,41 +75,44 @@
     <script>
         window.addEventListener('load', function() {
             function delete_user(id) {
+                $('#confirmDeleteModal').modal('show');
 
-                $.ajax({
-                    type: 'post',
-                    url: '/delete_user',
-                    data: {
-                        '_token': '<?= csrf_token() ?>',
-                        id: id,
-                    },
-                    success: function(data) {
-                        if (data.error) {
-                            $('#notifDiv').fadeIn();
-                            $('#notifDiv').css('background', 'red');
-                            $('#notifDiv').text('Erro ao excluir');
-                            setTimeout(() => {
-                                $('#notifDiv').fadeOut();
-                            }, 3000);
-                        } else if (data.success) {
-                            $('#notifDiv').fadeIn();
-                            $('#notifDiv').css('background', 'green');
-                            $('#notifDiv').text(data.success);
-                            setTimeout(() => {
-                                $('#notifDiv').fadeOut();
-                            }, 3000);
-                            location.reload();
-                        } else {
-                            $('#notifDiv').fadeIn();
-                            $('#notifDiv').css('background', 'red');
-                            $('#notifDiv').text('An error occured. Please try later');
-                            setTimeout(() => {
-                                $('#notifDiv').fadeOut();
-                            }, 3000);
-                        }
-                        $(this).text('Save');
-                        $(this).removeAttr('disabled');
-                    }.bind($(this))
+                $('#confirmDeleteButton').on('click', function() {
+                    $.ajax({
+                        type: 'delete',
+                        url: 'delete_user',
+                        data: {
+                            '_token': '{{ csrf_token() }}',
+                            id: id,
+                        },
+                        success: function(data) {
+                            if (data.error) {
+                                $('#notifDiv').fadeIn();
+                                $('#notifDiv').css('background', 'red');
+                                $('#notifDiv').text('Erro ao excluir');
+                                setTimeout(() => {
+                                    $('#notifDiv').fadeOut();
+                                }, 3000);
+                            } else if (data.success) {
+                                $('#notifDiv').fadeIn();
+                                $('#notifDiv').css('background', 'green');
+                                $('#notifDiv').text(data.success);
+                                setTimeout(() => {
+                                    $('#notifDiv').fadeOut();
+                                }, 3000);
+                                location.reload();
+                            } else {
+                                $('#notifDiv').fadeIn();
+                                $('#notifDiv').css('background', 'red');
+                                $('#notifDiv').text('An error occurred. Please try later');
+                                setTimeout(() => {
+                                    $('#notifDiv').fadeOut();
+                                }, 3000);
+                            }
+                            $(this).text('Save');
+                            $(this).removeAttr('disabled');
+                        }.bind($(this))
+                    });
                 });
             };
 

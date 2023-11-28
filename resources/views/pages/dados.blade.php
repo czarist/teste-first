@@ -11,19 +11,19 @@
                             <h4 class="text-center">Atualizar Meus Dados</h4>
                         </div>
                         <div class="card-body">
-                            <form>
+                            <form >
                                 @csrf
                                 <input type="hidden" name="id" id="id" value="{{ $user['id'] }}">
                                 <div class="form-group">
                                     <label for="fname">Primeiro Nome</label>
-                                    <input disabled type="text" name="fname" id="fname" class="form-control"
-                                        placeholder="{{ isset($user['fname']) ? $user['fname'] : '' }}">
+                                    <input type="text" name="fname" id="fname" class="form-control"
+                                        value="{{ isset($user['fname']) ? $user['fname'] : '' }}">
                                 </div>
 
                                 <div class="form-group">
                                     <label for="lname">Ultimo Nome</label>
-                                    <input disabled type="text" name="lname" id="lname" class="form-control"
-                                        placeholder="{{ isset($user['lname']) ? $user['lname'] : '' }}">
+                                    <input type="text" name="lname" id="lname" class="form-control"
+                                        value="{{ isset($user['lname']) ? $user['lname'] : '' }}">
                                 </div>
 
                                 <div class="form-group">
@@ -44,6 +44,12 @@
                                         placeholder="**************************">
                                 </div>
 
+                                <div class="form-group">
+                                    <label for="password_confirmation">Confirmar Senha</label>
+                                    <input type="password" id="password_confirmation" name="password_confirmation"
+                                        class="form-control" placeholder="**************************">
+                                </div>
+
                                 <button type="submit" class="btn btn-dark btn-block" id="save_form">ATUALIZAR
                                     DADOS</button>
                             </form>
@@ -60,16 +66,32 @@
         $(document).ready(function() {
             $('#save_form').on('click', function(e) {
                 e.preventDefault();
-                var email = $("#email").val();
-                var phone = $("#phone").val();
-                var password = $("#password").val();
-                var id = $("#id").val()
+                const fname = $("#fname").val();
+                const lname = $("#lname").val();
+                const email = $("#email").val();
+                const phone = $("#phone").val();
+                const password = $("#password").val();
+                const password_confirmation = $("#password_confirmation").val();
+                const id = $("#id").val();
+
+                if (password !== password_confirmation) {
+                    $('#notifDiv').fadeIn();
+                    $('#notifDiv').css('background', 'red');
+                    $('#notifDiv').text('As senhas não coincidem');
+                    setTimeout(() => {
+                        $('#notifDiv').fadeOut();
+                    }, 3000);
+                    return;
+                }
 
                 $.ajax({
-                    type: 'post',
+                    type: 'put',
                     url: '/update_register',
                     data: {
-                        '_token': '<?= csrf_token() ?>',
+                        '_token': '{{ csrf_token() }}',
+                        '_method': 'PUT',
+                        lname: lname,
+                        fname: fname,
                         email: email,
                         phone: phone,
                         password: password,
@@ -90,12 +112,10 @@
                             setTimeout(() => {
                                 $('#notifDiv').fadeOut();
                             }, 3000);
-                            // $('[name="email"]').val('');
-                            // $('[name="password"]').val('');
                         } else {
                             $('#notifDiv').fadeIn();
                             $('#notifDiv').css('background', 'red');
-                            $('#notifDiv').text('An error occured. Please try later');
+                            $('#notifDiv').text('An error occurred. Please try later');
                             setTimeout(() => {
                                 $('#notifDiv').fadeOut();
                             }, 3000);

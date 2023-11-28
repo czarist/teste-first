@@ -47,8 +47,8 @@
                 });
 
                 e.preventDefault();
-                var email = $("#email").val();
-                var password = $("#password").val();
+                const email = $("#email").val();
+                const password = $("#password").val();
 
                 $.ajax({
                     url: 'user_login',
