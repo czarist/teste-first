@@ -61,7 +61,6 @@
 @push('javascript')
     <script>
         $(document).ready(function() {
-
             $('#save_form').on('click', function(e) {
                 let csrfToken = $('meta[name="csrf-token"]').attr('content');
 
@@ -74,12 +73,7 @@
                 const password_confirmation = $("#password_confirmation").val();
 
                 if (password !== password_confirmation) {
-                    $('#notifDiv').fadeIn();
-                    $('#notifDiv').css('background', 'red');
-                    $('#notifDiv').text('As senhas não coincidem');
-                    setTimeout(() => {
-                        $('#notifDiv').fadeOut();
-                    }, 3000);
+                    showError('As senhas não coincidem');
                     return;
                 }
 
@@ -95,39 +89,46 @@
                         password: password
                     },
                     success: function(data) {
-                        if (data.exists) {
-                            $('#notifDiv').fadeIn();
-                            $('#notifDiv').css('background', 'red');
-                            $('#notifDiv').text('Email already exists');
-                            setTimeout(() => {
-                                $('#notifDiv').fadeOut();
-                            }, 3000);
+                        if (data.errors) {
+                            for (const key in data.errors) {
+                                showError(data.errors[key][0]);
+                            }
+                        } else if (data.exists) {
+                            showError('Email already exists');
                         } else if (data.success) {
-                            $('#notifDiv').fadeIn();
-                            $('#notifDiv').css('background', 'green');
-                            $('#notifDiv').text(data.success);
-                            setTimeout(() => {
-                                $('#notifDiv').fadeOut();
-                            }, 3000);
+                            showSuccess(data.success);
                             $('[name="fname"]').val('');
                             $('[name="lname"]').val('');
                             $('[name="email"]').val('');
                             $('[name="password"]').val('');
                             $('[name="password_confirmation"]').val('');
-                            window.location.replace('/login')
+                            window.location.replace('/login');
                         } else {
-                            $('#notifDiv').fadeIn();
-                            $('#notifDiv').css('background', 'red');
-                            $('#notifDiv').text('An error occurred. Please try later');
-                            setTimeout(() => {
-                                $('#notifDiv').fadeOut();
-                            }, 3000);
+                            showError('An error occurred. Please try later');
                         }
                         $(this).text('Save');
                         $(this).removeAttr('disabled');
                     }.bind($(this))
                 });
             });
+
+            function showError(message) {
+                $('#notifDiv').fadeIn();
+                $('#notifDiv').css('background', 'red');
+                $('#notifDiv').text(message);
+                setTimeout(() => {
+                    $('#notifDiv').fadeOut();
+                }, 3000);
+            }
+
+            function showSuccess(message) {
+                $('#notifDiv').fadeIn();
+                $('#notifDiv').css('background', 'green');
+                $('#notifDiv').text(message);
+                setTimeout(() => {
+                    $('#notifDiv').fadeOut();
+                }, 3000);
+            }
         });
     </script>
 @endpush

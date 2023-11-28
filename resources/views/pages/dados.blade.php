@@ -11,7 +11,7 @@
                             <h4 class="text-center">Atualizar Meus Dados</h4>
                         </div>
                         <div class="card-body">
-                            <form >
+                            <form>
                                 @csrf
                                 <input type="hidden" name="id" id="id" value="{{ $user['id'] }}">
                                 <div class="form-group">
@@ -59,6 +59,8 @@
             </div>
         </div>
     </section>
+
+    <div id="notifDiv" style="display:none;"></div>
 @endsection
 
 @push('javascript')
@@ -98,10 +100,10 @@
                         id: id
                     },
                     success: function(data) {
-                        if (data.exists) {
+                        if (data.error) {
                             $('#notifDiv').fadeIn();
                             $('#notifDiv').css('background', 'red');
-                            $('#notifDiv').text('Email already exists');
+                            $('#notifDiv').text(data.error);
                             setTimeout(() => {
                                 $('#notifDiv').fadeOut();
                             }, 3000);
@@ -122,7 +124,22 @@
                         }
                         $(this).text('Save');
                         $(this).removeAttr('disabled');
-                    }.bind($(this))
+                    }.bind($(this)),
+                    error: function(xhr, textStatus, errorThrown) {
+                        console.log(xhr.responseText);
+                        $('#notifDiv').fadeIn();
+                        $('#notifDiv').css('background', 'red');
+                        xhr.responseText = xhr.responseText
+                            .replace(/{|}|"|\[|\]/g, '')
+                            .replace(/:/g, ' : ')
+                            .replace(/,/g, '\n');
+
+                        $('#notifDiv').text(xhr.responseText);
+
+                        setTimeout(() => {
+                            $('#notifDiv').fadeOut();
+                        }, 3000);
+                    }
                 });
             });
         });
